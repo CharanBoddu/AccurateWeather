@@ -105,7 +105,7 @@
        <ImageView
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:id="@+id/idIVcon"
+           android:id="@+id/idIVIcon"
            android:layout_centerHorizontal="true"
            android:layout_below="@id/idTVTemperature"
            android:layout_margin="10dp"
@@ -120,7 +120,7 @@
            android:textAlignment="center"
            android:text="Condition"
            android:textColor="@color/white"
-           android:layout_below="@+id/idIVcon"
+           android:layout_below="@+id/idIVIcon"
            />
 
        <TextView
@@ -130,13 +130,13 @@
            android:layout_marginBottom="10dp"
            android:text="Today's Weather Forecast is"
            android:textColor="@color/white"
-           android:layout_above="@+id/idRvWeather"
+           android:layout_above="@+id/idRVWeather"
            android:textStyle="bold"/>
 
        <androidx.recyclerview.widget.RecyclerView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:id="@+id/idRvWeather"
+           android:id="@+id/idRVWeather"
            android:layout_alignParentBottom="true"
            android:orientation="horizontal"
            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
