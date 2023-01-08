@@ -22,7 +22,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -125,8 +135,43 @@ public class MainActivity extends AppCompatActivity {
 
     private void getWeatherInfo(String cityName){
         String url = "http://api.weatherapi.com/v1/forecast.json?key=94b335e3c1a94d1c9bf22010230601&q=" + cityName + "&days=1&aqi=yes&alerts=yes";
+        cityNameTV.setText(cityName);
 
+        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
 
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                loadingPB.setVisibility(View.GONE);
+                homeRL.setVisibility(View.VISIBLE);
+                weatherRVModelArrayList.clear();
+                try {
+                    String temperature = response.getJSONObject("current").getString("temp_c");
+                    temperatureTV.setText(temperature + "°c");
+                    int isDay = response.getJSONObject("current").getInt("is_day");
+                    String condition = response.getJSONObject("current").getJSONObject("condition").getString("text");
+                    String conditionIcon = response.getJSONObject("current").getJSONObject("condition").getString("icon");
 
+                    Picasso.get().load("http:".concat(conditionIcon)).into(iconIV);
+                    conditionTV.setText(condition);
+                    if(isDay==1){
+                        Picasso.get().load("https://cdn.pixabay.com/photo/2018/08/06/22/55/sun-3588618__480.jpg").into(backIV);
+                    }else{
+                        Picasso.get().load("https://images.unsplash.com/photo-1648691962140-670628ea1714?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xlYXIlMjBuaWdodCUyMHNreXxlbnwwfHwwfHw%3D&w=1000&q=80").into(backIV);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MainActivity.this, "Please enter valid City Name..", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        requestQueue.add(jsonObjectRequest);
     }
 }
