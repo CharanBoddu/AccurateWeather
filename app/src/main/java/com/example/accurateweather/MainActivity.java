@@ -31,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -159,6 +160,20 @@ public class MainActivity extends AppCompatActivity {
                     }else{
                         Picasso.get().load("https://images.unsplash.com/photo-1648691962140-670628ea1714?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xlYXIlMjBuaWdodCUyMHNreXxlbnwwfHwwfHw%3D&w=1000&q=80").into(backIV);
                     }
+
+                    JSONObject forecastObj = response.getJSONObject("forecast");
+                    JSONObject forecastO = forecastObj.getJSONArray("forecastday").getJSONObject(0);
+                    JSONArray hourArray = forecastO.getJSONArray("hour");
+
+                    for (int i=0; i<hourArray.length(); i++){
+                        JSONObject hourObj = hourArray.getJSONObject(i);
+                        String time = hourObj.getString("time");
+                        String tempera = hourObj.getString("temp_c");
+                        String imag = hourObj.getJSONObject("condition").getString("icon");
+                        String wind = hourObj.getString("wind_kph");
+                        weatherRVModelArrayList.add(new WeatherRVModel(time,tempera,imag,wind));
+                    }
+                    weatherRVAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
